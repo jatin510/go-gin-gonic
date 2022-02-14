@@ -5,5 +5,5 @@ func Initialize() {
 
 	r := NewRouter()
 	// r.Run(config)
-	r.Run("4000")
+	r.Run()
 }
