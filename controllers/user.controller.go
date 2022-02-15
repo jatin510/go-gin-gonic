@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"gin-gonic-api/forms"
 	"gin-gonic-api/models"
 
 	"github.com/gin-gonic/gin"
@@ -25,5 +26,21 @@ func (u UserController) Retrieve(c *gin.Context) {
 	}
 	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})
 	c.Abort()
-	return
+}
+
+func (u UserController) SignUpUser(c *gin.Context) {
+	userSignUpForm := forms.UserSignUp{}
+
+	if err := c.Bind(&userSignUpForm); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		return
+	}
+
+	user, err := userModel.Create(userSignUpForm)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error to retrieve user", "error": err})
+		c.Abort()
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": user})
 }
